@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getResto } from "../api";
+import { getResto, searchResto } from "../api";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -10,6 +10,14 @@ function Home() {
 
   const showMore = () => {
     setVisible((prevValue) => prevValue + 4);
+  };
+  const showLess = () => {
+    setVisible((prevValue) => prevValue - 4);
+  };
+
+  const searchNama = async (q) => {
+    const query = await searchResto(q);
+    setlistResto(query.restaurants);
   };
 
   useEffect(() => {
@@ -44,16 +52,9 @@ function Home() {
                 <input
                   type="search"
                   id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50  border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
                   placeholder="Name"
-                />
-              </div>
-              <div className="relative w-full">
-                <input
-                  type="search"
-                  id="search-dropdown"
-                  className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                  placeholder="City"
+                  onChange={({ target }) => searchNama(target.value)}
                 />
                 <button
                   type="submit"
@@ -160,7 +161,13 @@ function Home() {
             })}
           </div>
 
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-10">
+            <button
+              className="py-3 px-8 my-12 bg-red-400 rounded-full text-white text-md"
+              onClick={showLess}
+            >
+              Load Less
+            </button>
             <button
               className="py-3 px-8 my-12 bg-teal-600 rounded-full text-white text-md"
               onClick={showMore}
